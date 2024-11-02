@@ -14,17 +14,17 @@ const router = createRouter({
             path: '/game',
             name: 'game',
             component: GameView,
-            beforeEnter: (to, from, next) => {
+           /*  beforeEnter: (to, from, next) => {
                 const userName = sessionStorage.getItem('userName')
                 const selectedTheme = sessionStorage.getItem('selectedTheme')
                 const selectedMode = sessionStorage.getItem('selectedMode')
-    
+
                 if (userName && selectedTheme && selectedMode) {
                     next()
                 } else {
                     next({ path: '/' })
                 }
-            },
+            }, */
         },
     ],
 })

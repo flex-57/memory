@@ -39,7 +39,7 @@
 
 <script setup>
 import router from '@/router'
-import { ref, watchEffect } from 'vue'
+import { onMounted, ref, watchEffect } from 'vue'
 import { ucFirst } from '@/utils/stringUtils'
 
 // info de config des selects
@@ -90,7 +90,7 @@ form {
     width: 50%;
     background-color: var(--color3);
     border: 1px solid var(--color4);
-    border-radius: .4rem;
+    border-radius: 0.4rem;
     padding: 1rem 2rem;
 }
 </style>
