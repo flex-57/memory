@@ -1,0 +1,68 @@
+:root {
+  --color1: #223344;
+  --color2: #3f4e5d;
+  --color2-hover: #4d7399;
+  --color3: #152b3f;
+  --color4: #fff;
+  --color-card-back1: #000000;
+  --color-card-back2: #693001e3;
+  --color-card-back3: #eec670;
+}
+body {
+  margin: 0;
+  padding: 0;
+  background-color: var(--color1);
+  color: var(--color4);
+  font-size: 24px;
+  font-family: 'Courier New', Courier, monospace;
+}
+.container {
+  padding: 0.5rem 2rem;
+}
+h1 {
+  font-size: 2.4rem;
+  font-weight: bold;
+  padding: 1.5rem 0;
+  text-align: center;
+}
+label {
+  display: inline-block;
+  padding: 0.5rem 0;
+}
+
+form {
+  div {
+    padding: 0.4em 2rem 0.8rem 1rem;
+  }
+}
+input,
+select,
+button {
+  font-size: 1.5rem;
+  height: 2.2rem;
+  padding: 0.4rem;
+  box-sizing: content-box;
+  width: 100%;
+  border-radius: 0.3rem;
+}
+button {
+  background-color: var(--color2);
+  color: var(--color4);
+  font-size: 1.7rem;
+  padding: 0.6rem;
+  border: none;
+  margin-top: 1rem;
+}
+button:hover:not(:disabled) {
+  background-color: var(--color2-hover);
+}
+button:disabled {
+  opacity: 40%;
+  color: rgb(192, 192, 192);
+}
+p {
+  padding: 0.5rem;
+}
+strong {
+  font-weight: bold;
+}
