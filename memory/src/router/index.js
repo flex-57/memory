@@ -1,5 +1,6 @@
 import GameView from '@/views/GameView.vue'
 import HomeView from '@/views/HomeView.vue'
+import ResultsView from '@/views/ResultsView.vue'
 import { createRouter, createWebHistory } from 'vue-router'
 
 const router = createRouter({
@@ -26,6 +27,11 @@ const router = createRouter({
                 }
             }, */
         },
+        {
+            path: '/results',
+            name: 'results',
+            component: ResultsView
+        }
     ],
 })
 
