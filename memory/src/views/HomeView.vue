@@ -39,7 +39,7 @@
 
 <script setup>
 import router from '@/router'
-import { onMounted, ref, watchEffect } from 'vue'
+import { ref, watchEffect } from 'vue'
 import { ucFirst } from '@/utils/stringUtils'
 
 // info de config des selects

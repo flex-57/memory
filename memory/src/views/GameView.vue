@@ -1,16 +1,47 @@
 <template>
     <header>
-        <h1>{{ mode }}</h1>
-        <div>Prénom et nom : {{ capitalizeName(userName) }}</div>
-        <div>Thème : {{ ucFirst(theme) }}</div>
+        <h1>Memory : {{ mode }}</h1>
+        <div class="container">
+            <div>
+                <p>
+                    <span>Utilisateur : </span>
+                    <strong>{{ capitalizeName(userName) }}</strong>
+                </p>
+                <p>
+                    <span>Thème de jeu : </span>
+                    <strong>{{ ucFirst(theme) }}</strong>
+                </p>
+            </div>
+            <div>
+                <p>
+                    <span>Coups min : </span>
+                    <strong>{{ cards.length }}</strong>
+                </p>
+                <p>
+                    <span>Coups : </span>
+                    <strong>{{ moves }}</strong>
+                </p>
+            </div>
+            <div>
+                <p>
+                    <span>Paires trouvées : </span>
+                    <strong>{{ pairsFound }} / {{ nbPairs }}</strong>
+                </p>
+            </div>
+        </div>
     </header>
     <main>
         <div>
-            <div v-if="loading">Chargement...</div>
-            <div v-if="error">{{ errorMessage }}</div>
+            <div v-if="errorMessage !== ''">{{ errorMessage }}</div>
+            <div v-else-if="loading">Chargement...</div>
             <div v-else>
-                <div v-for="card in cards" :key="card.id">
-                    <img :src="card.imgPath" :alt="card.name" />
+                <div class="cards">
+                    <Card
+                        v-for="card in cards"
+                        :key="card.id"
+                        :card="card"
+                        @eflipCard="flipCard"
+                    />
                 </div>
             </div>
         </div>
@@ -18,10 +49,10 @@
 </template>
 
 <script setup>
-import { shuffleArray } from '@/utils/arrayUtils'
 import { fetchCards } from '@/utils/fetchCards'
 import { capitalizeName, ucFirst } from '@/utils/stringUtils'
-import { computed, onMounted, reactive, ref, watchEffect } from 'vue'
+import Card from '@/components/Card.vue'
+import { computed, onMounted, ref, watchEffect } from 'vue'
 
 const userName = ref(sessionStorage.getItem('userName'))
 const theme = ref(sessionStorage.getItem('selectedTheme'))
@@ -35,22 +66,45 @@ const mode = computed(() => {
 })
 
 const loading = ref(true)
-const error = ref(false)
 const errorMessage = ref('')
-const cards = reactive([])
+
+const cards = ref([])
+const flippedCards = ref([])
+const moves = ref(0)
+const pairsFound = ref(0)
 
 const nbPairs = ref(2)
 
+const flipCard = card => {
+    console.log(card)
+    if (!card.isFlipped && flippedCards.value.length < 2) {
+        card.isFlipped = true
+        flippedCards.value.push(card)
+        moves.value++
+        if (flippedCards.value.length === 2) {
+            checkMatch()
+        }
+    }
+}
+
+const checkMatch = () => {
+    const [card1, card2] = flippedCards.value
+    if (card1.name === card2.name) {
+        flippedCards.value = []
+        pairsFound.value += 1
+    } else {
+        setTimeout(() => {
+            card1.isFlipped = false
+            card2.isFlipped = false
+            flippedCards.value = []
+        }, 1000)
+    }
+}
+
 onMounted(async () => {
     try {
-        const fetchedCards = await fetchCards(theme.value)
-        const slicedCards = fetchedCards.slice(0, nbPairs.value)
-        const allCards = shuffleArray([...slicedCards, ...slicedCards]).map(
-            (card, index) => ({ ...card, id: index }),
-        )
-        cards.push(...allCards)
+        cards.value = await fetchCards(theme.value, nbPairs.value)
     } catch (err) {
-        error.value = true
         errorMessage.value =
             'Impossible de charger les cartes. Veuillez réessayer.'
     } finally {
@@ -63,4 +117,34 @@ watchEffect(() => {
 })
 </script>
 
-<style></style>
+<style scoped>
+.container {
+    justify-content: space-evenly;
+    border-radius: 0.3rem;
+    border: 1px solid var(--color4);
+    font-size: 1.4rem;
+}
+.h3 {
+    padding: 1rem;
+    margin-top: 1.5rem;
+    text-align: center;
+    button {
+        width: auto;
+        margin: 0 0 0 2rem;
+        padding: 0.3rem 1rem;
+        font-size: 1.5rem;
+    }
+}
+p {
+    margin-top: 0.8rem;
+}
+.cards {
+    padding: 1rem;
+    border: 1px solid var(--color4);
+    border-radius: 0.3rem;
+    display: grid;
+    grid-template-columns: repeat(8, 1fr);
+    justify-items: center;
+    gap: 0.8rem;
+}
+</style>
