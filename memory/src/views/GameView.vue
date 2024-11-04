@@ -53,6 +53,7 @@ import { fetchCards } from '@/utils/fetchCards'
 import { capitalizeName, ucFirst } from '@/utils/stringUtils'
 import Card from '@/components/Card.vue'
 import { computed, onMounted, ref, watchEffect } from 'vue'
+import router from '@/router'
 
 const userName = ref(sessionStorage.getItem('userName'))
 const theme = ref(sessionStorage.getItem('selectedTheme'))
@@ -76,7 +77,6 @@ const pairsFound = ref(0)
 const nbPairs = ref(2)
 
 const flipCard = card => {
-    console.log(card)
     if (!card.isFlipped && flippedCards.value.length < 2) {
         card.isFlipped = true
         flippedCards.value.push(card)
@@ -92,6 +92,9 @@ const checkMatch = () => {
     if (card1.name === card2.name) {
         flippedCards.value = []
         pairsFound.value += 1
+        if (pairsFound.value === nbPairs.value) {
+            endGame()
+        }
     } else {
         setTimeout(() => {
             card1.isFlipped = false
@@ -99,6 +102,10 @@ const checkMatch = () => {
             flippedCards.value = []
         }, 1000)
     }
+}
+
+const endGame = () => {
+    router.push('/results')
 }
 
 onMounted(async () => {
