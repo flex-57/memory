@@ -15,7 +15,6 @@ const props = defineProps({
 const emit = defineEmits(['eflipCard'])
 
 const flipCard = () => {
-    console.log('click')
     if (!props.card.flipped) {
         emit('eflipCard', props.card)
     }

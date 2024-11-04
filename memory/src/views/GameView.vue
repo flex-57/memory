@@ -53,7 +53,7 @@ import { fetchCards } from '@/utils/fetchCards'
 import { capitalizeName, ucFirst } from '@/utils/stringUtils'
 import Card from '@/components/Card.vue'
 import { computed, onMounted, ref, watchEffect } from 'vue'
-import router from '@/router';
+import router from '@/router'
 
 const userName = ref(sessionStorage.getItem('userName'))
 const theme = ref(sessionStorage.getItem('selectedTheme'))
@@ -77,7 +77,6 @@ const pairsFound = ref(0)
 const nbPairs = ref(2)
 
 const flipCard = card => {
-    console.log(card)
     if (!card.isFlipped && flippedCards.value.length < 2) {
         card.isFlipped = true
         flippedCards.value.push(card)
