@@ -55,6 +55,6 @@ const flipCard = () => {
     box-shadow: 1px 1px 12px 5px #0f171fc4;
 }
 .flipped {
-    transform: rotatey(180deg);
+    transform: rotateY(180deg);
 }
 </style>
