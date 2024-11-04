@@ -28,7 +28,10 @@
                     <strong>{{ pairsFound }} / {{ nbPairs }}</strong>
                 </p>
                 <p>
-                    <Timer :start="isStarted" />
+                    <Timer
+                        :start="isStarted"
+                        @emitPause="isPaused = !isPaused"
+                    />
                 </p>
             </div>
         </div>
@@ -43,6 +46,7 @@
                         v-for="card in cards"
                         :key="card.id"
                         :card="card"
+                        :isPaused="isPaused"
                         @emitFlipCard="flipCard"
                     />
                 </div>
@@ -81,6 +85,7 @@ const pairsFound = ref(0)
 const nbPairs = ref(2)
 
 const isStarted = ref(false)
+const isPaused = ref(false)
 
 const flipCard = card => {
     if (!isStarted.value) {
@@ -122,7 +127,6 @@ onMounted(async () => {
     try {
         cards.value = await fetchCards(theme.value, nbPairs.value)
     } catch (e) {
-        console.log(e)
         errorMessage.value =
             'Impossible de charger les cartes. Veuillez réessayer.'
     } finally {
@@ -138,7 +142,7 @@ watchEffect(() => {
 <style scoped>
 .container {
     justify-content: space-evenly;
-    border-radius: 0.3rem;
+    border-radius: 0.6rem;
     border: 1px solid var(--color4);
     font-size: 1.4rem;
 }
@@ -159,7 +163,7 @@ p {
 .cards {
     padding: 1rem;
     border: 1px solid var(--color4);
-    border-radius: 0.3rem;
+    border-radius: 0.6rem;
     display: grid;
     grid-template-columns: repeat(8, 1fr);
     justify-items: center;

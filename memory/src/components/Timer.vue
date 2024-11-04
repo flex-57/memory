@@ -1,5 +1,5 @@
 <template>
-    {{ formatTime(timer) }}
+    temps : {{ formatTime(timer) }}
     <button @click="togglePause" :disabled="!isStarted">
         {{ isPaused ? 'Reprendre' : 'Pause' }}
     </button>
@@ -13,6 +13,8 @@ const props = defineProps({
     start: Boolean,
 })
 
+const emit = defineEmits(['emitPause'])
+
 const timer = ref(0)
 
 const isPaused = ref(false)
@@ -24,22 +26,22 @@ const timerStart = () => {
     if (!timerInterval) {
         isStarted.value = true
         timerInterval = setInterval(() => {
-            timer.value += 1
+            timer.value++
         }, 1000)
     }
+    localStorage.setItem('gameTime', timer.value)
 }
 
 const togglePause = () => {
     isPaused.value = !isPaused.value
     if (!isPaused.value) {
-        console.log(isPaused.value)
-        timerStart()
         timerInterval = setInterval(() => {
-            timer.value += 1
+            timer.value++
         }, 1000)
     } else {
         clearInterval(timerInterval)
     }
+    emit('emitPause', isPaused.value)
 }
 
 watchEffect(() => {
@@ -47,9 +49,14 @@ watchEffect(() => {
         timerStart()
     }
 })
+
 onUnmounted(() => {
     clearInterval(timerInterval)
 })
 </script>
 
-<style></style>
+<style>
+button {
+    display: inline;
+}
+</style>
