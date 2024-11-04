@@ -27,6 +27,9 @@
                     <span>Paires trouvées : </span>
                     <strong>{{ pairsFound }} / {{ nbPairs }}</strong>
                 </p>
+                <p>
+                    <Timer :start="isStarted" />
+                </p>
             </div>
         </div>
     </header>
@@ -40,7 +43,7 @@
                         v-for="card in cards"
                         :key="card.id"
                         :card="card"
-                        @eflipCard="flipCard"
+                        @emitFlipCard="flipCard"
                     />
                 </div>
             </div>
@@ -54,6 +57,7 @@ import { capitalizeName, ucFirst } from '@/utils/stringUtils'
 import Card from '@/components/Card.vue'
 import { computed, onMounted, ref, watchEffect } from 'vue'
 import router from '@/router'
+import Timer from '@/components/Timer.vue'
 
 const userName = ref(sessionStorage.getItem('userName'))
 const theme = ref(sessionStorage.getItem('selectedTheme'))
@@ -76,7 +80,12 @@ const pairsFound = ref(0)
 
 const nbPairs = ref(2)
 
+const isStarted = ref(false)
+
 const flipCard = card => {
+    if (!isStarted.value) {
+        isStarted.value = true
+    }
     if (!card.isFlipped && flippedCards.value.length < 2) {
         card.isFlipped = true
         flippedCards.value.push(card)
@@ -105,13 +114,15 @@ const checkMatch = () => {
 }
 
 const endGame = () => {
+    localStorage.setItem('nbMoves', moves.value)
     router.push('/results')
 }
 
 onMounted(async () => {
     try {
         cards.value = await fetchCards(theme.value, nbPairs.value)
-    } catch (err) {
+    } catch (e) {
+        console.log(e)
         errorMessage.value =
             'Impossible de charger les cartes. Veuillez réessayer.'
     } finally {

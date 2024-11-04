@@ -12,11 +12,11 @@ const props = defineProps({
     card: Object,
 })
 
-const emit = defineEmits(['eflipCard'])
+const emit = defineEmits(['emitFlipCard'])
 
 const flipCard = () => {
     if (!props.card.flipped) {
-        emit('eflipCard', props.card)
+        emit('emitFlipCard', props.card)
     }
 }
 </script>
