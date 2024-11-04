@@ -3,7 +3,7 @@
         <h1>Bienvenue dans le jeu de mémoire !</h1>
         <form @submit.prevent="startGame">
             <div>
-                <label for="theme">Sélectionnez le thème des cartes :</label>
+                <label for="theme">Sélectionnez le thème des cartes:</label>
                 <select id="theme" name="theme" v-model="selectedTheme">
                     <option v-for="theme in themes" :key="theme" :value="theme">
                         {{ ucFirst(theme) }}
@@ -11,7 +11,7 @@
                 </select>
             </div>
             <div>
-                <label for="mode">Sélectionnez le mode de jeu :</label>
+                <label for="mode">Sélectionnez le mode de jeu:</label>
                 <select id="mode" name="mode" v-model="selectedMode">
                     <option v-for="{ id, name } in modes" :key="id" :value="id">
                         {{ ucFirst(name) }}
@@ -19,7 +19,7 @@
                 </select>
             </div>
             <div>
-                <label for="name">Saisissez votre prénom et votre nom :</label>
+                <label for="name">Saisissez votre prénom et votre nom:</label>
                 <input
                     type="text"
                     id="name"
@@ -90,7 +90,7 @@ form {
     width: 50%;
     background-color: var(--color3);
     border: 1px solid var(--color4);
-    border-radius: 0.4rem;
+    border-radius: 0.6rem;
     padding: 1rem 2rem;
 }
 </style>

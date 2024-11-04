@@ -7,7 +7,7 @@
   --color-card-back1: #000000;
   --color-card-back2: #693001e3;
   --color-card-back3: #eec670;
-  font-size: 24px;
+  font-size: 20px;
 }
 body {
   margin: 0;
@@ -33,7 +33,7 @@ label {
 
 form {
   div {
-    padding: 0.4em 2rem 0.8rem 1rem;
+    padding: 0.4em 1.5rem 0.8rem 0.7rem;
   }
 }
 input,
@@ -44,7 +44,9 @@ button {
   padding: 0.4rem;
   box-sizing: content-box;
   width: 100%;
-  border-radius: 0.3rem;
+  border-radius: 0.4rem;
+  box-shadow: 1px 1px 12px 5px #0f171f80;
+  transition: all 0.2s ease;
 }
 button {
   background-color: var(--color2);
