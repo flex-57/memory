@@ -57,6 +57,9 @@ onUnmounted(() => {
 
 <style>
 button {
-    display: inline;
+    display: block;
+    max-width: calc(9rem - 5px);
+    padding: 0.5rem 1rem;
+    margin: 0;
 }
 </style>

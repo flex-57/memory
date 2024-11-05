@@ -88,6 +88,7 @@ const startGame = () => {
 form {
     margin: 0 auto;
     width: 50%;
+    min-width: 600px;
     background-color: var(--color3);
     border: 1px solid var(--color4);
     border-radius: 0.6rem;
