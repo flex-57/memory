@@ -1,0 +1,16 @@
+[
+    {
+        "gameMode": "test", 
+        "levels": 6,
+        "nbPairs": [12, 12, 12, 12, 12, 12],
+        "pause": [20, 20, 20, 20, 1200]
+        
+    },
+    {
+        "gameMode": "relearn",
+        "levels": 7,
+        "nbPairs": [2, 4, 8, 12, 16, 20, 28],
+        "pause": [0, 0, 0, 0, 0, 0]
+        
+    }
+]
