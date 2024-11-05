@@ -9,11 +9,15 @@
 <script setup>
 import { capitalizeName } from '@/utils/stringUtils'
 import { formatTime } from '@/utils/timeUtils'
-import { ref } from 'vue'
+import { ref, watchEffect } from 'vue'
 
 const userName = ref(sessionStorage.getItem('userName'))
 const nbMoves = ref(localStorage.getItem('nbMoves'))
 const gameTime = ref(localStorage.getItem('gameTime'))
+
+watchEffect(() => {
+    document.title = `Mémory :: Resultats`
+})
 </script>
 
 <style></style>
