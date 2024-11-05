@@ -28,6 +28,12 @@
                     <strong>{{ pairsFound }} / {{ nbPairs }}</strong>
                 </p>
                 <p>
+                    <span>Niveau : </span>
+                    <strong>{{ countLevels + 1 }} / {{ config.levels }}</strong>
+                </p>
+            </div>
+            <div>
+                <p>
                     <Timer
                         :start="isStarted"
                         @emitPause="isPaused = !isPaused"
@@ -38,18 +44,18 @@
     </header>
     <main>
         <div>
-            <div v-if="errorMessage !== ''" class="error">{{ errorMessage }}</div>
-            <div v-else-if="loading">Chargement...</div>
-            <div v-else>
-                <div class="cards">
-                    <Card
-                        v-for="card in cards"
-                        :key="card.id"
-                        :card="card"
-                        :isPaused="isPaused"
-                        @emitFlipCard="flipCard"
-                    />
-                </div>
+            <div v-if="errorMessage !== ''" class="msg error">
+                {{ errorMessage }}
+            </div>
+            <div v-else-if="loading" class="msg loading">Chargement...</div>
+            <div v-else class="cards">
+                <Card
+                    v-for="card in cards"
+                    :key="card.id"
+                    :card="card"
+                    :isPaused="isPaused"
+                    @emitFlipCard="flipCard"
+                />
             </div>
         </div>
     </main>
@@ -66,11 +72,11 @@ import { fetchConfig } from '@/utils/fetchConfig'
 
 const userName = ref(sessionStorage.getItem('userName'))
 const theme = ref(sessionStorage.getItem('selectedTheme'))
+const selectedMode = ref(sessionStorage.getItem('selectedMode'))
 const mode = computed(() => {
-    const selectedMode = sessionStorage.getItem('selectedMode')
-    return selectedMode === 'test'
+    return selectedMode.value === 'test'
         ? 'Test de la mémoire'
-        : selectedMode === 'relearn'
+        : selectedMode.value === 'relearn'
           ? 'Réapprentissage'
           : ''
 })
@@ -86,7 +92,7 @@ const flippedCards = ref([])
 const moves = ref(0)
 const pairsFound = ref(0)
 
-const nbPairs = ref(2)
+const nbPairs = ref(0)
 
 const isStarted = ref(false)
 const isPaused = ref(false)
@@ -123,34 +129,33 @@ const checkMatch = () => {
 }
 
 const endGame = () => {
-    if(countLevels.value < config.value.levels) {
-        countLevels.value++
+    if (countLevels.value < config.value.levels - 1) {
+        setTimeout(() => {
+            countLevels.value++
+            cards.value = []
+            pairsFound.value = 0
+            fetchGameData()
+        }, 1000)
+    } else {
+        localStorage.setItem('nbMoves', moves.value)
+        router.push('/results')
     }
-    localStorage.setItem('nbMoves', moves.value)
-    router.push('/results')
 }
 
-onMounted(async () => {
+const fetchGameData = async () => {
     try {
-        config.value = await fetchConfig(theme.value)
+        config.value = await fetchConfig(selectedMode.value)
+        nbPairs.value = config.value.nbPairs[countLevels.value]
+        cards.value = await fetchCards(theme.value, nbPairs.value)
     } catch (e) {
-        console.log(e)
         errorMessage.value =
             'Impossible de charger la configuration. Veuillez réessayer!'
     } finally {
         loading.value = false
     }
+}
 
-    try {
-        cards.value = await fetchCards(theme.value, config.value.nbPairs[countLevels.value])
-    } catch (e) {
-        console.log(e)
-        errorMessage.value =
-            'Impossible de charger les cartes. Veuillez réessayer!'
-    } finally {
-        loading.value = false
-    }
-})
+onMounted(fetchGameData)
 
 watchEffect(() => {
     document.title = `Mémory :: ${mode.value}`
@@ -178,10 +183,21 @@ watchEffect(() => {
 p {
     margin-top: 0.8rem;
 }
+.msg {
+    margin-top: 1rem;
+    padding: 0.6rem;
+    border-radius: 0.6rem;
+}
 .error {
-    padding: 2rem 1rem;
+    color: rgba(224, 24, 24, 0.712);
+    text-align: center;
+    font-weight: bold;
+}
+.loading {
+    text-align: center;
 }
 .cards {
+    margin-top: 2rem;
     padding: 1rem;
     border: 1px solid var(--color4);
     border-radius: 0.6rem;

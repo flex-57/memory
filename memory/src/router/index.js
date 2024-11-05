@@ -1,5 +1,5 @@
-import GameView from '@/views/GameView.vue'
 import HomeView from '@/views/HomeView.vue'
+import GameView from '@/views/GameView.vue'
 import ResultsView from '@/views/ResultsView.vue'
 import { createRouter, createWebHistory } from 'vue-router'
 
@@ -15,7 +15,7 @@ const router = createRouter({
             path: '/game',
             name: 'game',
             component: GameView,
-            /*  beforeEnter: (to, from, next) => {
+            beforeEnter: (to, from, next) => {
                 const userName = sessionStorage.getItem('userName')
                 const selectedTheme = sessionStorage.getItem('selectedTheme')
                 const selectedMode = sessionStorage.getItem('selectedMode')
@@ -25,7 +25,7 @@ const router = createRouter({
                 } else {
                     next({ path: '/' })
                 }
-            }, */
+            },
         },
         {
             path: '/results',
