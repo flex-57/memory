@@ -38,7 +38,7 @@
     </header>
     <main>
         <div>
-            <div v-if="errorMessage !== ''">{{ errorMessage }}</div>
+            <div v-if="errorMessage !== ''" class="error">{{ errorMessage }}</div>
             <div v-else-if="loading">Chargement...</div>
             <div v-else>
                 <div class="cards">
@@ -56,12 +56,13 @@
 </template>
 
 <script setup>
+import router from '@/router'
 import { fetchCards } from '@/utils/fetchCards'
 import { capitalizeName, ucFirst } from '@/utils/stringUtils'
-import Card from '@/components/Card.vue'
 import { computed, onMounted, ref, watchEffect } from 'vue'
-import router from '@/router'
-import Timer from '@/components/Timer.vue'
+import Card from '@/components/CardComponent.vue'
+import Timer from '@/components/TimerComponent.vue'
+import { fetchConfig } from '@/utils/fetchConfig'
 
 const userName = ref(sessionStorage.getItem('userName'))
 const theme = ref(sessionStorage.getItem('selectedTheme'))
@@ -73,6 +74,9 @@ const mode = computed(() => {
           ? 'Réapprentissage'
           : ''
 })
+
+const config = ref([])
+const countLevels = ref(0)
 
 const loading = ref(true)
 const errorMessage = ref('')
@@ -119,16 +123,30 @@ const checkMatch = () => {
 }
 
 const endGame = () => {
+    if(countLevels.value < config.value.levels) {
+        countLevels.value++
+    }
     localStorage.setItem('nbMoves', moves.value)
     router.push('/results')
 }
 
 onMounted(async () => {
     try {
-        cards.value = await fetchCards(theme.value, nbPairs.value)
+        config.value = await fetchConfig(theme.value)
     } catch (e) {
+        console.log(e)
         errorMessage.value =
-            'Impossible de charger les cartes. Veuillez réessayer.'
+            'Impossible de charger la configuration. Veuillez réessayer!'
+    } finally {
+        loading.value = false
+    }
+
+    try {
+        cards.value = await fetchCards(theme.value, config.value.nbPairs[countLevels.value])
+    } catch (e) {
+        console.log(e)
+        errorMessage.value =
+            'Impossible de charger les cartes. Veuillez réessayer!'
     } finally {
         loading.value = false
     }
@@ -159,6 +177,9 @@ watchEffect(() => {
 }
 p {
     margin-top: 0.8rem;
+}
+.error {
+    padding: 2rem 1rem;
 }
 .cards {
     padding: 1rem;
