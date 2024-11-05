@@ -1,14 +1,15 @@
 import axios from 'axios'
 
-export const fetchConfig = async (theme) => {
+export const fetchConfig = async mode => {
     try {
         const res = await axios.get(`/data/configGame.json`)
         if (res.data) {
-            return (res.data).find((e) => e.gameMode = theme)
+            return res.data.find(e => e.gameMode === mode)
         }
-    }
-    catch(error) {
-        console.error('Erreur lors de la récupération de la configuration :', error)
-        throw error
+    } catch (error) {
+        throw new Error(
+            'Erreur lors de la récupération de la configuration :',
+            error,
+        )
     }
 }
