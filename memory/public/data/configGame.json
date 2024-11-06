@@ -8,9 +8,9 @@
     },
     {
         "gameMode": "relearn",
-        "levels": 7,
+        "levels": 2,
         "nbPairs": [2, 4, 8, 12, 16, 20, 28],
-        "pause": [0, 0, 0, 0, 0, 0]
+        "pause": [1, 1, 1, 1, 1, 1]
         
     }
 ]
