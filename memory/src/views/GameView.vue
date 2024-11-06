@@ -97,14 +97,19 @@ const nbPairs = ref(0)
 const isStarted = ref(false)
 const isPaused = ref(false)
 
+
+
 const flipCard = card => {
     if (!isStarted.value) {
         isStarted.value = true
     }
     if (!card.isFlipped && flippedCards.value.length < 2) {
         card.isFlipped = true
+        card.nbClicks++
         flippedCards.value.push(card)
         moves.value++
+
+        localStorage.setItem('cardsStats', JSON.stringify(cards.value))
         if (flippedCards.value.length === 2) {
             checkMatch()
         }
@@ -129,17 +134,17 @@ const checkMatch = () => {
 }
 
 const endGame = () => {
-    setTimeout(() => {
     if (countLevels.value < config.value.levels - 1) {
+        setTimeout(() => {
             countLevels.value++
             cards.value = []
             pairsFound.value = 0
             fetchGameData()
-        } else {
-            localStorage.setItem('totalMoves', moves.value)
-            router.push('/results')
-        }
-    }, config.value.pause[countLevels.value] * 1000)
+        }, config.value.pause[countLevels.value] * 1000)
+    } else {
+        localStorage.setItem('totalMoves', moves.value)
+        router.push('/results')
+    }
 }
 
 const fetchGameData = async () => {

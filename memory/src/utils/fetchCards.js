@@ -9,11 +9,13 @@ export const fetchCards = async (theme, nbPairs) => {
                 .map(card => ({
                     ...card,
                     isFlipped: false,
+                    nbClicks: 0,
                     imgPath: `/images/${theme}/${card.name}`,
                 }))
                 .slice(0, nbPairs)
-            const allCards = shuffleArray([...cards, ...cards]).map(card => ({
+            const allCards = shuffleArray([...cards, ...cards]).map((card, index) => ({
                 ...card,
+                index
             }))
 
             return allCards
