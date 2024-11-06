@@ -6,10 +6,9 @@ export const fetchConfig = async mode => {
         if (res.data) {
             return res.data.find(e => e.gameMode === mode)
         }
-    } catch (error) {
+    } catch (e) {
         throw new Error(
-            'Erreur lors de la récupération de la configuration :',
-            error,
+            'Erreur lors de la récupération de la configuration.', e
         )
     }
 }

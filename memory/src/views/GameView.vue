@@ -115,7 +115,7 @@ const checkMatch = () => {
     const [card1, card2] = flippedCards.value
     if (card1.name === card2.name) {
         flippedCards.value = []
-        pairsFound.value += 1
+        pairsFound.value++
         if (pairsFound.value === nbPairs.value) {
             endGame()
         }
@@ -129,17 +129,17 @@ const checkMatch = () => {
 }
 
 const endGame = () => {
+    setTimeout(() => {
     if (countLevels.value < config.value.levels - 1) {
-        setTimeout(() => {
             countLevels.value++
             cards.value = []
             pairsFound.value = 0
             fetchGameData()
-        }, 1000)
-    } else {
-        localStorage.setItem('nbMoves', moves.value)
-        router.push('/results')
-    }
+        } else {
+            localStorage.setItem('totalMoves', moves.value)
+            router.push('/results')
+        }
+    }, config.value.pause[countLevels.value] * 1000)
 }
 
 const fetchGameData = async () => {
@@ -148,8 +148,7 @@ const fetchGameData = async () => {
         nbPairs.value = config.value.nbPairs[countLevels.value]
         cards.value = await fetchCards(theme.value, nbPairs.value)
     } catch (e) {
-        errorMessage.value =
-            'Impossible de charger la configuration. Veuillez réessayer!'
+        errorMessage.value = e.message
     } finally {
         loading.value = false
     }
