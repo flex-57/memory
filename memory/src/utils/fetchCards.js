@@ -18,7 +18,9 @@ export const fetchCards = async (theme, nbPairs) => {
 
             return allCards
         }
-    } catch (error) {
-        throw new Error('Erreur lors de la récupération des cartes :', error)
+    } catch (e) {
+        throw new Error(
+            'Erreur lors de la récupération des cartes.', e
+        )
     }
 }
