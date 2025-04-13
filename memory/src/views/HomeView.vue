@@ -75,12 +75,11 @@ const startGame = () => {
     sessionStorage.setItem('selectedMode', selectedMode.value)
 
     // redirection
-    router.push('/game')
+    /* router.push('/game') */
 
-    /**
-     * interdit le retour navigateur (à voir...)
-     * router.replace('/game')
-     */
+
+    router.replace('/game')
+
 }
 </script>
 
