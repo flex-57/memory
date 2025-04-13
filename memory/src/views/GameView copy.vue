@@ -29,7 +29,7 @@
                 </p>
                 <p>
                     <span>Niveau : </span>
-                    <strong>{{ currentLevel + 1 }} / {{ config.levels }}</strong>
+                    <strong>{{ countLevels + 1 }} / {{ config.levels }}</strong>
                 </p>
             </div>
             <div>
@@ -44,13 +44,10 @@
     </header>
     <main>
         <div>
-            <div class="container-loading">
-                <div class="msg loading"></div>
-            </div>
             <div v-if="errorMessage !== ''" class="msg error">
                 {{ errorMessage }}
             </div>
-            <!-- <div v-else-if="loading" class="msg loading">Chargement...</div> -->
+            <div v-else-if="loading" class="msg loading">Chargement...</div>
             <div v-else class="cards">
                 <Card
                     v-for="card in cards"
@@ -67,11 +64,11 @@
 <script setup>
 import router from '@/router'
 import { fetchCards } from '@/utils/fetchCards'
-import { fetchConfig } from '@/utils/fetchConfig'
 import { capitalizeName, ucFirst } from '@/utils/stringUtils'
 import { computed, onMounted, ref, watchEffect } from 'vue'
 import Card from '@/components/CardComponent.vue'
 import Timer from '@/components/TimerComponent.vue'
+import { fetchConfig } from '@/utils/fetchConfig'
 
 const userName = ref(sessionStorage.getItem('userName'))
 const theme = ref(sessionStorage.getItem('selectedTheme'))
@@ -85,7 +82,7 @@ const mode = computed(() => {
 })
 
 const config = ref([])
-const currentLevel = ref(0)
+const countLevels = ref(0)
 
 const loading = ref(true)
 const errorMessage = ref('')
@@ -111,6 +108,8 @@ const flipCard = card => {
         card.nbClicks++
         flippedCards.value.push(card)
         moves.value++
+
+        localStorage.setItem('cardsStats', JSON.stringify(cards.value))
         if (flippedCards.value.length === 2) {
             checkMatch()
         }
@@ -135,13 +134,13 @@ const checkMatch = () => {
 }
 
 const endGame = () => {
-    if (currentLevel.value < config.value.levels - 1) {
+    if (countLevels.value < config.value.levels - 1) {
         setTimeout(() => {
-            currentLevel.value++
+            countLevels.value++
             cards.value = []
             pairsFound.value = 0
             fetchGameData()
-        }, config.value.pause[currentLevel.value] * 1000)
+        }, config.value.pause[countLevels.value] * 1000)
     } else {
         localStorage.setItem('totalMoves', moves.value)
         router.push('/results')
@@ -151,7 +150,7 @@ const endGame = () => {
 const fetchGameData = async () => {
     try {
         config.value = await fetchConfig(selectedMode.value)
-        nbPairs.value = config.value.nbPairs[currentLevel.value]
+        nbPairs.value = config.value.nbPairs[countLevels.value]
         cards.value = await fetchCards(theme.value, nbPairs.value)
     } catch (e) {
         errorMessage.value = e.message
@@ -198,16 +197,8 @@ p {
     text-align: center;
     font-weight: bold;
 }
-.container-loading {
-    display: flex;
-    justify-content: center;
-}
 .loading {
     text-align: center;
-    border: .5rem dotted #fff;
-    border-bottom: .5rem dotted transparent;
-    border-radius: 360px;
-    animation: rotate 1s linear infinite;
 }
 .cards {
     margin-top: 2rem;
@@ -219,19 +210,4 @@ p {
     justify-items: center;
     gap: 0.8rem;
 }
-
-@keyframes rotate {
-    from {
-        transform: rotate(0deg);
-        
-    }
-    
-    to {
-        border-left: .5rem dotted transparent;
-        border-right: .5rem dotted transparent;
-        border-top: .5rem dotted transparent;
-        transform: rotate(359deg);
-    }
-}
-
 </style>

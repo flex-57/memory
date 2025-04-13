@@ -6,11 +6,11 @@
         <p>Nombre de coups total : {{ totalMoves }}</p>
         <p>Temps total: {{ formatTime(gameTime) }}</p>
         <div class="cards">
-            <p v-for="cardStats in JSON.parse(cardsStats)" :key="cardStats.index" class="card">
-                {{ console.log(cardStats) }}
-                <img :src="cardStats.imgPath" alt=""> {{ cardStats.nbClicks }} {{ cardStats.nbClicks <= 1 ? 'click' : 'clicks' }}
+            <p v-for="(gameStats, index) in gamesStats" :key="index" class="card">
+                <img :src="gameStats.imgPath" alt=""> {{ gameStats.nbClicks }} {{ gameStats.nbClicks <= 1 ? 'click' : 'clicks' }}
             </p>
         </div>
+        {{ console.log(gamesStats.value) }}
     </div>
 </template>
 
@@ -22,9 +22,7 @@ import { ref, watchEffect } from 'vue'
 const userName = ref(sessionStorage.getItem('userName'))
 const totalMoves = ref(localStorage.getItem('totalMoves'))
 const gameTime = ref(localStorage.getItem('gameTime'))
-const cardsStats = ref(localStorage.getItem('cardsStats'))
-
-console.log(cardsStats.value)
+const gamesStats = ref(localStorage.getItem('gamesStats'))
 
 
 watchEffect(() => {
@@ -37,8 +35,8 @@ watchEffect(() => {
     display: flex;
 }
 .card, img {
-    width: 100px;
-    height: 100px;
+    width: 50px;
+    height: 50px;
     box-shadow: 1px 1px 12px 5px #0f171f80;
     border-radius: 0.4rem;
 }
